@@ -1,0 +1,32 @@
+{
+  "dashboard": {
+    "title": "Microservices Overview",
+    "panels": [
+      {
+        "title": "Request Rate",
+        "targets": [
+          {
+            "expr": "rate(http_requests_total[5m])",
+            "datasource": "Tempo"
+          }
+        ],
+        "type": "graph"
+      },
+      {
+        "title": "Error Rate",
+        "targets": [
+          {
+            "expr": "{service=~\".*\"} | json | level=\"error\"",
+            "datasource": "Loki"
+          }
+        ],
+        "type": "logs"
+      },
+      {
+        "title": "Trace Timeline",
+        "type": "tempo-trace-timeline",
+        "datasource": "Tempo"
+      }
+    ]
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "name": "@myapp/observability",
+  "version": "1.0.0",
+  "main": "dist/tracing.js",
+  "types": "dist/tracing.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepare": "npm run build"
+  },
+  "exports": {
+    "./tracing": {
+      "types": "./dist/tracing.d.ts",
+      "default": "./dist/tracing.js"
+    },
+    "./trace.decorator": {
+      "types": "./dist/trace.decorator.d.ts",
+      "default": "./dist/trace.decorator.js"
+    },
+    "./trace.interceptor": {
+      "types": "./dist/trace.interceptor.d.ts",
+      "default": "./dist/trace.interceptor.js"
+    },
+    "./logger.config": {
+      "types": "./dist/logger.config.d.ts",
+      "default": "./dist/logger.config.js"
+    }
+  },
+  "dependencies": {
+    "@nestjs/common": "^10.0.0",
+    "@opentelemetry/api": "^1.7.0",
+    "@opentelemetry/sdk-node": "^0.45.0",
+    "@opentelemetry/auto-instrumentations-node": "^0.40.0",
+    "@opentelemetry/exporter-trace-otlp-grpc": "^0.45.0",
+    "@opentelemetry/exporter-metrics-otlp-grpc": "^0.45.0",
+    "@opentelemetry/instrumentation-http": "^0.45.0",
+    "@opentelemetry/instrumentation-nestjs-core": "^0.34.0",
+    "winston": "^3.11.0",
+    "nest-winston": "^1.9.4"
+  },
+  "devDependencies": {
+    "typescript": "^5.1.3"
+  }
+}

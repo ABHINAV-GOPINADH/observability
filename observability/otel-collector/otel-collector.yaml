@@ -1,0 +1,55 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  batch:
+    timeout: 10s
+    send_batch_size: 1024
+  
+  resource:
+    attributes:
+      - key: environment
+        value: development
+        action: insert
+  
+  probabilistic_sampler:
+    sampling_percentage: 100
+
+exporters:
+  otlp/tempo:
+    endpoint: tempo:14317
+    tls:
+      insecure: true
+  
+  # New OpenSearch Exporter
+  opensearch:
+    http:
+      endpoint: "http://opensearch:9200"
+    logs_index: "otel-logs"   # Indices will be created automatically
+    traces_index: "otel-traces"
+
+  debug:
+    verbosity: detailed
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch, resource, probabilistic_sampler]
+      exporters: [otlp/tempo, opensearch, debug] # Added opensearch here
+    
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [debug]
+
+    # Added logs pipeline to capture application logs
+    logs:
+      receivers: [otlp]
+      processors: [batch, resource]
+      exporters: [opensearch, debug]
